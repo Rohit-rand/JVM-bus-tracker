@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Bus Pass Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="sidebar">
+    <h2>🚌 BusPass</h2>
+
+    <a href="#">Dashboard</a>
+    <a href="#">My Bus Pass</a>
+    <a href="#">Renew Pass</a>
+    <a href="#">Profile</a>
+    <a href="#">Logout</a>
+    <button type="button" onclick="studentLogin()">Login</button>
+    
+<p class="register-link">
+    Don't have an account?
+
+    <a href="register.html">Register as Student</a>
+</p>
+</div>
+<button type="submit">Login</button>
+
+<div class="main">
+
+    <header>
+        <h1>Student Dashboard</h1>
+        <p>Welcome, Siren 👋</p>
+    </header>
+
+    <div class="pass-card">
+
+        <div class="card-header">
+            <h2>Your Bus Pass</h2>
+            <span id="status">Checking...</span>
+        </div>
+
+        <div class="pass-details">
+
+            <div>
+                <label>Pass Number</label>
+                <p>BP1025</p>
+            </div>
+
+            <div>
+                <label>Student Name</label>
+                <p>Rohit</p>
+            </div>
+
+            <div>
+                <label>Route</label>
+                <p>Airoli → College</p>
+            </div>
+
+            <div>
+                <label>Pass Type</label>
+                <p>Monthly</p>
+            </div>
+
+            <div>
+                <label>Start Date</label>
+                <p>01/10/2026</p>
+            </div>
+
+            <div>
+                <label>Expiry Date</label>
+                <p id="expiryDate">31/10/2026</p>
+            </div>
+
+        </div>
+
+        <div id="alert"></div>
+
+        <button onclick="renewPass()">Renew Pass</button>
+
+    </div>
+
+</div>
+<script>
+
+function studentLogin() {
+
+    const email = prompt("Enter your registered email:");
+    const password = prompt("Enter your password:");
+
+    if (!email || !password) {
+        return;
+    }
+
+    const students =
+        JSON.parse(localStorage.getItem("students")) || [];
+
+    const student = students.find(function(student) {
+
+        return student.email === email &&
+               student.password === password;
+
+    });
+
+    if (student) {
+
+        localStorage.setItem(
+            "loggedInStudent",
+            JSON.stringify(student)
+        );
+
+        alert("Login successful! 🎉");
+
+        location.reload();
+
+    } else {
+
+        alert("Invalid email or password!");
+
+    }
+}
+
+
+function checkPassStatus() {
+
+    const expiry = new Date("2026-10-31");
+    const today = new Date();
+
+    const difference = expiry - today;
+
+    const daysLeft = Math.ceil(
+        difference / (1000 * 60 * 60 * 24)
+    );
+
+    const status = document.getElementById("status");
+    const alertBox = document.getElementById("alert");
+
+    if (daysLeft < 0) {
+
+        status.innerText = "Expired";
+        status.style.background = "#fee2e2";
+        status.style.color = "#dc2626";
+
+        alertBox.innerText =
+            "🔴 Your bus pass has expired.";
+
+    } 
+    else if (daysLeft <= 5) {
+
+        status.innerText = "Expiring Soon";
+        status.style.background = "#fef3c7";
+        status.style.color = "#d97706";
+
+        alertBox.innerText =
+            `⚠️ Your bus pass will expire in ${daysLeft} days. Please renew it.`;
+
+    } 
+    else {
+
+        status.innerText = "Active";
+        status.style.background = "#dcfce7";
+        status.style.color = "#16a34a";
+
+        alertBox.innerText =
+            `🟢 Your bus pass is active. ${daysLeft} days remaining.`;
+    }
+}
+
+
+function renewPass() {
+
+    alert("Your renewal request has been submitted!");
+
+}
+
+
+checkPassStatus();
+
+</script>
+</body>
+</html>
